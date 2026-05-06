@@ -106,7 +106,6 @@ header{background:var(--navy);color:var(--white);padding:8px 16px 6px;flex-shrin
 .eid{font-size:10px;color:var(--gray);font-weight:700;min-width:24px}
 .et{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
 .etg{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--light);color:var(--steel);font-weight:500}
-.ep{font-size:18px;color:var(--steel);font-weight:700}
 .ex-edit{font-size:10px;color:var(--steel);font-weight:700;background:var(--light);border:1px solid var(--gmed);border-radius:4px;padding:2px 6px;cursor:pointer;margin-left:4px}
 .se{text-align:center;padding:40px 20px;color:var(--gray)}
 .se .ico{font-size:40px;margin-bottom:8px;opacity:.3}
@@ -134,10 +133,6 @@ header{background:var(--navy);color:var(--white);padding:8px 16px 6px;flex-shrin
 .cp{color:var(--gray);flex:1;line-height:1.3}
 .cc{font-weight:700;font-size:10px;padding:1px 5px;border-radius:3px;flex-shrink:0}
 .cc.g{background:var(--green-bg);color:var(--green)}.cc.m{background:var(--amber-bg);color:var(--warm)}.cc.l{color:var(--gray);background:var(--gmed)}
-.ct{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
-.ctp{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700}
-.ctp.met{background:var(--green-bg);color:var(--green)}.ctp.un{background:var(--light);color:var(--gray)}
-
 /* BEYOND THE REPS (Tab 3) */
 .btr{padding:16px}
 .btr-section{margin-bottom:16px}
@@ -215,7 +210,6 @@ header{background:var(--navy);color:var(--white);padding:8px 16px 6px;flex-shrin
     <div class="panel" id="pbtr">
       <div class="btr">
         <div class="btr-section"><div class="btr-label">Reflections</div><div class="btr-hint">What the workout meant beyond the reps.</div><textarea class="btr-area" id="btr-ref" oninput="saveBTR()"></textarea></div>
-        <div class="btr-section"><div class="btr-label">Golden Nugget</div><textarea class="btr-area sm" id="btr-gn" oninput="saveBTR()"></textarea></div>
         <button class="btn btn-p btn-full" onclick="exportAll()">Copy full day</button>
       </div>
     </div>
@@ -239,7 +233,6 @@ header{background:var(--navy);color:var(--white);padding:8px 16px 6px;flex-shrin
 <script>
 const PN=['Push','Pull','Hinge','Squat','Rotation','Core','Locomotion','Plyometric','Mobility','Single-leg','Carry'];
 const PF=[5,6,5,4,3,4,3,4,4,5,4];
-const PT=['M','M','P','P','P','M','M','P','M','M','P'];
 const D1=new Date(2026,1,16),TD=319;
 
 // PROTEIN PER WINDOW (conservative)
@@ -474,8 +467,8 @@ function rProt(){
 }
 
 // BEYOND THE REPS
-function loadBTR(){const b=gBTR(S.vday);document.getElementById('btr-ref').value=b.ref||'';document.getElementById('btr-gn').value=b.gn||''}
-function saveBTR(){const b=gBTR(S.vday);b.ref=document.getElementById('btr-ref').value;b.gn=document.getElementById('btr-gn').value;S.btr[S.vday]=b;svSt()}
+function loadBTR(){const b=gBTR(S.vday);document.getElementById('btr-ref').value=b.ref||''}
+function saveBTR(){const b=gBTR(S.vday);b.ref=document.getElementById('btr-ref').value;S.btr[S.vday]=b;svSt()}
 function saveNotes(){const chk=gChk(S.vday);chk._notes=document.getElementById('day-notes').value;S.chk[S.vday]=chk;svSt()}
 function loadNotes(){const chk=gChk(S.vday);document.getElementById('day-notes').value=chk._notes||''}
 
@@ -484,12 +477,12 @@ function bLib(){
   const el=document.getElementById('lib-content');let h='';
   for(let pi=0;pi<11;pi++){
     const xs=exs.filter(e=>e.patterns.includes(pi));
-    h+=`<div class="ps"><div class="ph" onclick="togP(${pi})"><span class="ph-a" id="a${pi}">\u25B6</span><span class="ph-n">${PN[pi]}</span><span class="ph-c">${xs.length}</span><span class="ph-f">${PT[pi]==='P'?'\u2B24':'\u25CB'} ${PF[pi]} per decad</span></div><div class="pe" id="p${pi}">`;
+    h+=`<div class="ps"><div class="ph" onclick="togP(${pi})"><span class="ph-a" id="a${pi}">\u25B6</span><span class="ph-n">${PN[pi]}</span><span class="ph-c">${xs.length}</span><span class="ph-f">${PF[pi]} per decad</span></div><div class="pe" id="p${pi}">`;
     xs.forEach(x=>{
       const ap=x.patterns.map(p=>PN[p]);const cc=x.cs===2?' corr':'';
       const isCust=S.cust.find(c=>c.id===x.id);
       h+=`<div class="ei${cc}" id="x${x.id}-${pi}" onclick="addEx(${x.id})"><span class="eid">#${x.id}</span><div style="flex:1"><div class="en">${x.name}${x.cs===2?' <span style="font-size:9px;color:var(--warm);font-weight:700">CORRECTIVE</span>':''}${isCust?' <span class="ex-edit" onclick="event.stopPropagation();editCust('+x.id+')">edit</span>':''}</div><div class="et">`;
-      ap.forEach(p=>{h+=`<span class="etg">${p}</span>`});h+=`</div></div><span class="ep">+</span></div>`;
+      ap.forEach(p=>{h+=`<span class="etg">${p}</span>`});h+=`</div></div></div>`;
     });
     h+=`</div></div>`;
   }
@@ -518,9 +511,6 @@ function rDctx(){
     const hit=new Array(11).fill(false);for(let pi=0;pi<11;pi++){if(dayHitsPattern(d,pi)){hit[pi]=true;dt[pi]++}}
     const hc=hit.filter(Boolean).length,iv=d===S.vday,cl=hc>=9?'g':hc>=5?'m':'l';
     h+=`<div class="cr"><span class="cd">${iv?'\u2192 ':''}D${d}</span><span class="cp">${hit.map((h2,i)=>h2?PN[i]:null).filter(Boolean).join(', ')||'\u2014'}</span><span class="cc ${cl}">${hc}/11</span></div>`}
-  h+=`<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--gmed)"><div style="font-size:10px;font-weight:700;color:var(--navy);margin-bottom:4px">Decad totals (days hit)</div><div class="ct">`;
-  for(let i=0;i<11;i++){h+=`<span class="ctp ${dt[i]>=PF[i]?'met':'un'}">${PN[i]} ${dt[i]}/${PF[i]}</span>`}
-  h+=`</div><div style="font-size:10px;margin-top:4px;color:var(--gray)">${dt.filter((c,i)=>c>=PF[i]).length}/11 floors met</div></div>`;
   el.innerHTML=h;
 }
 function uBadge(){const ss=gSess(S.vday),b=document.getElementById('sbadge');if(ss.ex.length>0){b.style.display='inline-block';b.textContent=ss.ex.length}else b.style.display='none'}
@@ -575,7 +565,6 @@ function exportAll(){
   // BTR
   const b=gBTR(S.vday);
   if(b.ref&&b.ref.trim())t+=`\nREFLECTIONS:\n${b.ref.trim()}\n`;
-  if(b.gn&&b.gn.trim())t+=`\nGOLDEN NUGGET:\n${b.gn.trim()}\n`;
   copyTxt(t);
 }
 function copyTxt(t){try{navigator.clipboard.writeText(t);toast('Copied')}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied')}}
